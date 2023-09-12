@@ -1,4 +1,4 @@
-module github.com/Arnobkumarsaha/try
+module github.com/Arnobkumarsaha/basic-k8s-client
 
 go 1.20
 
