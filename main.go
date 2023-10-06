@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -74,6 +76,14 @@ func kubeBuilderClient(config *rest.Config) error {
 		Scheme: scm,
 		Mapper: nil,
 	})
+	if err != nil {
+		return err
+	}
+
+	var depList appsv1.DeploymentList
+	mp := make(map[string]string)
+	mp["metadata.name"] = "helm-controller"
+	err = kc.List(context.Background(), &depList, client.MatchingFieldsSelector{Selector: fields.Set(mp).AsSelector()})
 	if err != nil {
 		return err
 	}
